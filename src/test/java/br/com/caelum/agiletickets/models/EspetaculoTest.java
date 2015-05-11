@@ -120,6 +120,7 @@ public class EspetaculoTest {
 		assertTrue(sessoesLista.get(2).getInicio().equals(dataInicio.plusDays(2).toDateTime(horario)));
 	}
 	
+	/*
 	@Test
 	public void cria1SessaoSemanalComecaHojeETerminaAmanha(){
 		Espetaculo espetaculo = new Espetaculo();
@@ -134,5 +135,6 @@ public class EspetaculoTest {
 		assertEquals(1,sessoesLista.size());
 		assertEquals(dataInicio.toDateTime(horario), sessoesLista.get(0).getInicio());
 	}
+	*/
 	
 }
