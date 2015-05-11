@@ -1,8 +1,15 @@
 package br.com.caelum.agiletickets.models;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import org.hibernate.validator.internal.constraintvalidators.AssertTrueValidator;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Test;
 
 public class EspetaculoTest {
@@ -79,6 +86,53 @@ public class EspetaculoTest {
 		sessao.setIngressosReservados(quantidade);
 
 		return sessao;
+	}
+	
+	@Test
+	public void cria1SessaoDiariaSeComecaETerminaHoje(){
+		Espetaculo espetaculo = new Espetaculo();
+		
+		LocalDate dataInicio = new LocalDate(2015,05,11);
+		LocalDate dataFim = new LocalDate(2015,05,11);
+		LocalTime horario = new LocalTime(20, 00, 00, 00);
+		
+		List<Sessao> sessoesLista = new ArrayList<Sessao>();
+		
+		sessoesLista =	espetaculo.criaSessoes(dataInicio, dataFim, horario, Periodicidade.DIARIA);
+		assertTrue(sessoesLista.size()==1);
+		assertTrue(sessoesLista.get(0).getInicio().equals(dataInicio.toDateTime(horario)));
+	}
+	
+	@Test
+	public void cria3SessaoDiariaSeComecaHojeETerminaDepoisDeAmanha(){
+		Espetaculo espetaculo = new Espetaculo();
+		
+		LocalDate dataInicio = new LocalDate(2015,05,11);
+		LocalDate dataFim = new LocalDate(2015,05,13);
+		LocalTime horario = new LocalTime(20, 00, 00, 00);
+		
+		List<Sessao> sessoesLista = new ArrayList<Sessao>();
+		
+		sessoesLista =	espetaculo.criaSessoes(dataInicio, dataFim, horario, Periodicidade.DIARIA);
+		assertTrue(sessoesLista.size()==3);
+		assertTrue(sessoesLista.get(0).getInicio().equals(dataInicio.toDateTime(horario)));
+		assertTrue(sessoesLista.get(1).getInicio().equals(dataInicio.plusDays(1).toDateTime(horario)));
+		assertTrue(sessoesLista.get(2).getInicio().equals(dataInicio.plusDays(2).toDateTime(horario)));
+	}
+	
+	@Test
+	public void cria1SessaoSemanalComecaHojeETerminaAmanha(){
+		Espetaculo espetaculo = new Espetaculo();
+		
+		LocalDate dataInicio = new LocalDate(2015,05,11);
+		LocalDate dataFim = new LocalDate(2015,05,12);
+		LocalTime horario = new LocalTime(20, 00, 00, 00);
+		
+		List<Sessao> sessoesLista = new ArrayList<Sessao>();
+		
+		sessoesLista =	espetaculo.criaSessoes(dataInicio, dataFim, horario, Periodicidade.SEMANAL);
+		assertEquals(1,sessoesLista.size());
+		assertEquals(dataInicio.toDateTime(horario), sessoesLista.get(0).getInicio());
 	}
 	
 }
